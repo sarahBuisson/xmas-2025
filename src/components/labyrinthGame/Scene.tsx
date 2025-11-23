@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
-import React, { ReactElement, useEffect, useRef } from 'react'
+import React, { ReactElement, useRef } from 'react'
 import { BoxGeometry, BufferGeometry, Mesh, MeshBasicMaterial, TextureLoader, Vector3 } from 'three'
 import { Cube } from './Cube'
 import { Sphere } from './Sphere'
@@ -13,8 +13,7 @@ import { Labyrinth } from '../../service/labGenerator';
 import { buildPassingMap, Kase2D, NormalTableau } from '../../service/tableau';
 import { GroundHeight } from './GroundHeight';
 import { SpriteCustom } from './SpriteCustom';
-import { DeformedBox } from '../aquarium/DeformedBox';
-import { AssetsDatas, FileData } from '../../build-tools/model-asset';
+import { AssetsDatas } from '../../build-tools/model-asset';
 
 const assetsDatas = await fetch('./assets/data.json').then(res => res.json() as Promise<AssetsDatas>)
 
@@ -53,23 +52,22 @@ const passingMap = buildPassingMap(l.tableau, 3, 3)
 
 const heightMap: number[][] = passingMap.map(i => i.map(j => j ? 0 : 1));
 
-const obstacleSpriteMap4=["styletrees.svg_group1","styletrees.svg_group2","styletrees.svg_group3","styletrees.svg_group4","styletrees.svg_group5","styletrees.svg_group6","styletrees.svg_group7","styletrees.svg_group8"]
-const obstacleSpriteMap=["trees3_group1","trees3_group2","trees3_group3","trees3_group4","trees3_group5","trees3_group6","trees3_group7","trees3_group8"]
-const obstacleSpriteMap3=["simpletrees_group1","simpletrees_group2","simpletrees_group3","simpletrees_group4","simpletrees_group5","simpletrees_group6","simpletrees_group7","simpletrees_group8"]
-const obstacleSpriteMap2=["trees.svg_group1","trees.svg_group2","trees.svg_group3","trees.svg_group4","trees.svg_group5","trees.svg_group6"]
+const obstacleSpriteMap4 = ["styletrees.svg_group1", "styletrees.svg_group2", "styletrees.svg_group3", "styletrees.svg_group4", "styletrees.svg_group5", "styletrees.svg_group6", "styletrees.svg_group7", "styletrees.svg_group8"]
+const obstacleSpriteMap = ["trees3_group1", "trees3_group2", "trees3_group3", "trees3_group4", "trees3_group5", "trees3_group6", "trees3_group7", "trees3_group8"]
+const obstacleSpriteMap3 = ["simpletrees_group1", "simpletrees_group2", "simpletrees_group3", "simpletrees_group4", "simpletrees_group5", "simpletrees_group6", "simpletrees_group7", "simpletrees_group8"]
+const obstacleSpriteMap2 = ["trees.svg_group1", "trees.svg_group2", "trees.svg_group3", "trees.svg_group4", "trees.svg_group5", "trees.svg_group6"]
 const obstacleSpriteMapOld = ["algues_group1",
     "algues_group1",
     "algues_group2",
     "algues_group3",
-    "algues_group4"   , "algues_group5"  ,  "algues_group6",  "algues_group7",  "algues_group8"
- ]
+    "algues_group4", "algues_group5", "algues_group6", "algues_group7", "algues_group8"
+]
 // @ts-ignore
 const stuffMap: ((v: Vector3) => ReactElement | string | undefined)[][] = passingMap
     .map(i => i.map(j => {
         let assetId = obstacleSpriteMap[Math.floor(Math.random() * obstacleSpriteMap.length)];
         const assetData = assetsDatas?.collections.flatMap(it => it.assets)?.find(it => it.id == assetId)!!
-       console.log(assetData,assetId)
-        let textureName ='./assets/'+(assetData.computedFilePathName||"star.svg")
+        let textureName = './assets/' + (assetData.computedFilePathName || "star.svg")
         return j ? undefined : (position: Vector3) =>
             SpriteCustom({
                     position,
@@ -135,13 +133,12 @@ function Scene() {
             <ambientLight intensity={0.2}/>
             <Physics debug>
                 <Cube ref={cubeRef}/>
-                <Sphere/>
+                <Sphere position={[3, 3, 3]}/>
                 <GroundHeight heightField={heightMap}
                               position={new Vector3(0, 0, 0)}
                               spriteMap={stuffMap}></GroundHeight>
                 <Player walk={2} jump={5} input={() => getInput(keyboard, mouse)}/>
                 {sprites}
-                <DeformedBox></DeformedBox>
             </Physics>
         </>
     )

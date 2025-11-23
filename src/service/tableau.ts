@@ -1,14 +1,6 @@
 import { random } from './utils';
+import type { Kase } from './kase.ts';
 
-
-export interface Kase {
-
-    connections: string[];
-
-    addConnection(kase: Kase): void;
-
-    positionKey(): string;
-}
 
 // Kase class
 export class Kase2D implements Kase {
@@ -145,7 +137,6 @@ export function buildPassingMap<T extends Kase2D>(tableau: Tableau<T>, passSize 
                     map[kase.x * (passSize + wallSize) + i+decalage][kase.y * (passSize + wallSize) + j+decalage] = true
         kase.connections.forEach((connection) => {
             const [x, y, z] = connection.split("/").map((val) => parseInt(val))
-            console.log("map connexion", x, y)
             for (let k = 0; k < wallSize; k++)
                 for (let l = 0; l < wallSize; l++) {
 

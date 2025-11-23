@@ -1,5 +1,6 @@
-import { Kase, Tableau } from './tableau';
+import { Tableau } from './tableau';
 import { random, removeFromArray } from './utils';
+import type { Kase } from './kase.ts';
 
 /*
 export class Kase {
