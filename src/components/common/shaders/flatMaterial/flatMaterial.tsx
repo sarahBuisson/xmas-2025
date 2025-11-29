@@ -14,7 +14,7 @@ const sizes = {
     pixelRatio: Math.min(window.devicePixelRatio, 2)
 }
 
-const FlatMaterial = shaderMaterial({
+export const FlatMaterial = shaderMaterial({
         uCameraDecalage: 0.0,
         uTexture: new THREE.Texture(),
         uResolution: new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio),

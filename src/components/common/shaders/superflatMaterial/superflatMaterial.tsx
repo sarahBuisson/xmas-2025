@@ -14,13 +14,15 @@ const sizes = {
 }
 
 
-export const BillBoardMaterial = shaderMaterial({
-        uTexture:new Texture(),
-        uCameraDecalage:0,
+export const SuperflatMaterial = shaderMaterial({
+        uTexture: new Texture(),
+        uCameraDecalage: 0,
+        ratioX: 5,
+        ratioY: 25,
         uResolution: new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio),
         fogColor: new Color(0x000000),
-    fogNear: 1,
-    fogFar: 15,
+        fogNear: 3,
+        fogFar: 15,
 
         // wireframe: true
     },
@@ -28,7 +30,41 @@ export const BillBoardMaterial = shaderMaterial({
 
     fragmentShader);
 
-extend({BillBoardMaterial})
+export const SuperflatBisMaterial = shaderMaterial({
+        uTexture: new Texture(),
+        uCameraDecalage: 0,
+        ratioX: 5,
+        ratioY: 25,
+        uResolution: new THREE.Vector2(sizes.width * sizes.pixelRatio, sizes.height * sizes.pixelRatio),
+        fogColor: new Color(0x000000),
+        fogNear: 3,
+        fogFar: 15,
+
+        // wireframe: true
+    },
+    "\n" +
+    "varying vec3 vPosition;\n" +
+    "varying vec3 vNormal;\n" +
+    "varying vec2 vUv;\n" +
+    "\n" +
+    "void main()\n" +
+    "{\n" +
+    "       vUv = uv;\n" +
+    "    // Position\n" +
+    "    vec4 modelPosition = modelMatrix * vec4(position, 1.0);\n" +
+    "    gl_Position = projectionMatrix * viewMatrix * modelPosition;\n" +
+    "\n" +
+    "    // Model normal\n" +
+    "    vec3 modelNormal = (modelMatrix * vec4(normal, 0.0)).xyz;\n" +
+    "\n" +
+    "    // Varyings\n" +
+    "    vNormal = modelNormal;\n" +
+    "    vPosition = modelPosition.xyz;\n" +
+    "}\n",
+
+    fragmentShader);
+
+extend({SuperflatMaterial})
 
 
 function BillboardScene() {
