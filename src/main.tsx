@@ -1,38 +1,29 @@
 import { Canvas } from '@react-three/fiber'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import './styles/main.css'
-import { Scene } from './components/labyrinthGame/Scene';
-import { FlatMaterialDemo } from './components/common/shaders/flatMaterial/flatMaterial';
+import { KeyboardControls } from '@react-three/drei';
+import { LandscapeScene } from './components/landscapeGame/LandscapeScene.tsx';
 
 function Main() {
-    return (
-        <div className='main'>
-            <p>Navigate with an orbital camera: click and move the mouse, zoom</p>
-            <Canvas
-                dpr={[1, 2]}
-                gl={{
-                    antialias: true,
-                    toneMapping: ACESFilmicToneMapping,
-                    outputColorSpace: SRGBColorSpace,
-                }}
-                camera={{
-                    fov: 55,
-                    near: 0.1,
-                    far: 200,
-                    position: [3, 2, 9],
-                }}
-                shadows
-            >
-                <Scene/>
+    return <React.StrictMode>
+        <KeyboardControls
+            map={[
+                {name: "forward", keys: ["ArrowUp", "w", "W"]},
+                {name: "backward", keys: ["ArrowDown", "s", "S"]},
+                {name: "left", keys: ["ArrowLeft", "a", "A"]},
+                {name: "right", keys: ["ArrowRight", "d", "D"]},
+                {name: "jump", keys: ["Space"]},
+            ]}>
+            <Canvas shadows>
+                {LandscapeScene()}
             </Canvas>
-        </div>
-    )
+
+            <img id="screenshot" style={{display: 'none'}}/>
+        </KeyboardControls>
+    </React.StrictMode>;
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <FlatMaterialDemo/>
-    </React.StrictMode>
+    Main()
 )
