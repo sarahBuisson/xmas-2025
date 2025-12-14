@@ -19,7 +19,7 @@ export function BigFire(props: {
     scale?: Vector3 | number,
     position?: Vector3
 }) {
-    console.log(firePng)
+
 
     /**
      * Smoke

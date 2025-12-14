@@ -4,7 +4,7 @@ import coffeeSmokeVertexShader from './shaders/coffeeSmoke/vertex.glsl'
 // @ts-ignore
 import coffeeSmokeFragmentShader from './shaders/coffeeSmoke/fragment.glsl'
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, shaderMaterial } from '@react-three/drei'
 import { BufferGeometry, Color, SphereGeometry, Vector3 } from 'three';
 
 // Loaders
@@ -19,7 +19,7 @@ export function Smoke(props: {
     scale?: Vector3 | number,
     position?: Vector3
 }) {
-
+console.log("smoke")
     /**
      * Smoke
      */
@@ -83,6 +83,17 @@ export function Smoke(props: {
     return <mesh geometry={geometry} material={smokeMaterial} position={props.position}/>
 
 }
+
+export const SmokeMaterial = shaderMaterial(
+{
+    uTime: new THREE.Uniform(0),
+        uColor: new THREE.Uniform(props.color || new Color(0xffffff)),
+    uPerlinTexture: new THREE.Uniform(perlinTexture)
+},
+    coffeeSmokeVertexShader,
+    coffeeSmokeFragmentShader
+);
+
 
 export function SmockeApp() {
     return (

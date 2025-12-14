@@ -18,4 +18,5 @@ export default defineConfig({
         '**/*.ply',   // Polygon File Format
         '**/*.png',   // Polygon File Format
     ],
+    minify: false,
 })

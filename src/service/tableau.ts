@@ -59,6 +59,13 @@ export abstract class Tableau<T extends Kase> {
         }
         return new (this as any)(cases);
     }
+
+    abstract getAllDirections(): { x: number, y: number }[];
+
+    abstract neighborAt(kase: T, dx: number, dy: number): T | null;
+     neighborAt2(kase: T, connectionKey:string): T | null{
+        return this.neighbors(kase).filter( (n)=>n.positionKey()===connectionKey)[0] || null;
+    }
 }
 
 // NormalTableau class
@@ -71,20 +78,28 @@ export class NormalTableau<TypeKase extends Kase2D> extends Tableau<TypeKase> {
     }
 
     neighbors(kase: TypeKase): TypeKase[] {
-        const directions = [
-            {dx: -1, dy: 0},
-            {dx: 1, dy: 0},
-            {dx: 0, dy: -1},
-            {dx: 0, dy: 1}
-        ];
+        const directions = this.getAllDirections();
         const neighbors: TypeKase[] = [];
-        for (const {dx, dy} of directions) {
-            const neighbor = this.getKase(kase.x + dx, kase.y + dy);
+        for (const {x, y} of directions) {
+            const neighbor = this.getKase(kase.x + x, kase.y + y);
             if (neighbor) {
                 neighbors.push(neighbor);
             }
         }
         return neighbors;
+    }
+
+    getAllDirections() {
+        return [
+            {x: -1, y: 0},
+            {x: 1, y: 0},
+            {x: 0, y: -1},
+            {x: 0, y: 1}
+        ];
+    }
+
+    neighborAt(kase: Kase2D, dx: number, dy: number):TypeKase | null {
+        return this.getKase(kase.x + dx, kase.y + dy);
     }
 }
 
@@ -98,22 +113,29 @@ export class HexagonalTableau<TypeKase extends Kase2D> extends Tableau<TypeKase>
     }
 
     neighbors(kase: TypeKase): TypeKase[] {
-        const directions = [
-            {dx: -1, dy: 0},
-            {dx: 1, dy: 0},
-            {dx: 0, dy: -1},
-            {dx: 0, dy: 1},
-            {dx: -1, dy: 1},
-            {dx: 1, dy: -1}
-        ];
+        const directions = this.getAllDirections();
         const neighbors: TypeKase[] = [];
-        for (const {dx, dy} of directions) {
-            const neighbor = this.getKase(kase.x + dx, kase.y + dy);
+        for (const {x, y} of directions) {
+            const neighbor = this.getKase(kase.x + x, kase.y + y);
             if (neighbor) {
                 neighbors.push(neighbor);
             }
         }
         return neighbors;
+    }
+
+    getAllDirections() {
+        return [
+            {x: -1, y: 0},
+            {x: -1, y: 1},
+            {x: 0, y: 1},
+            {x: 0, y: -1},
+            {x: 1, y: -1},
+            {x: 1, y: 0}
+        ];
+    }
+    neighborAt(kase: Kase2D, dx: number, dy: number):TypeKase | null {
+        return this.getKase(kase.x + dx, kase.y + dy);
     }
 }
 
@@ -123,9 +145,9 @@ export function buildPassingMap<T extends Kase2D>(tableau: Tableau<T>, passSize 
     const map: boolean[][] = []
     const decalage = wallSize // pour eviter que le lab ne soit collé au bord
 
-    for (let i = 0; i < tableau.sizeX * (passSize + wallSize)+decalage*2; i++) {
+    for (let i = 0; i < tableau.sizeX * (passSize + wallSize) + decalage * 2; i++) {
         map[i] = []
-        for (let j = 0; j < tableau.sizeY * (passSize + wallSize)+decalage*2; j++) {
+        for (let j = 0; j < tableau.sizeY * (passSize + wallSize) + decalage * 2; j++) {
             map[i][j] = false
 
         }
@@ -134,13 +156,13 @@ export function buildPassingMap<T extends Kase2D>(tableau: Tableau<T>, passSize 
         if (kase.connections.length > 0)
             for (let i = 0; i < passSize; i++)
                 for (let j = 0; j < passSize; j++)
-                    map[kase.x * (passSize + wallSize) + i+decalage][kase.y * (passSize + wallSize) + j+decalage] = true
+                    map[kase.x * (passSize + wallSize) + i + decalage][kase.y * (passSize + wallSize) + j + decalage] = true
         kase.connections.forEach((connection) => {
             const [x, y, z] = connection.split("/").map((val) => parseInt(val))
             for (let k = 0; k < wallSize; k++)
                 for (let l = 0; l < wallSize; l++) {
 
-                    map[(kase.x + x) * (passSize + wallSize) / 2 + k+decalage][(kase.y + y) * (passSize + wallSize) / 2 + l+decalage] = true
+                    map[(kase.x + x) * (passSize + wallSize) / 2 + k + decalage][(kase.y + y) * (passSize + wallSize) / 2 + l + decalage] = true
                 }
 
         })

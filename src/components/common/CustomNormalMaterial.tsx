@@ -3,9 +3,10 @@ import React, { useMemo } from 'react';
 import { extend } from '@react-three/fiber';
 
 // Custom ShaderMaterial
-class CustomNormalMaterial extends ShaderMaterial {
+export class CustomNormalMaterial extends ShaderMaterial {
     constructor(color1: Color = new Color(0xff0000), color2: Color = new Color(0x00ff00), color3: Color = new Color(0x0000ff)) {
         super({
+            side:2,
             uniforms: {
                 color1: { value: color1 },
                 color2: { value: color2 },

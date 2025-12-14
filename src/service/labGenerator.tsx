@@ -52,10 +52,31 @@ export class Labyrinth<TypeKase extends Kase> {
         kase1.addConnection(kase2)
         kase2.addConnection(kase1)
     }
+connectCorridor(kaseStart: TypeKase, length?:number) {
+        let currentKase = kaseStart
+        const visitedKases = [currentKase]
+        const maxLength = length || Math.floor(Math.random() * 5) + 3
+    let i = 0;
+        while (maxLength==undefined || i < maxLength) {
+            i++
+            const neighbors = this.getNeigbors(currentKase)
+                .filter(kase => kase.connections.length === 0)
+               // .filter(kase => !visitedKases.includes(kase))
 
+            if (neighbors.length === 0) {
+                break
+            }
+            const nextKase = random(neighbors)
+            this.connectKases(currentKase, nextKase)
+            visitedKases.push(nextKase)
+            currentKase = nextKase
+        }
+
+}
     fillLab() {
         const start = this.tableau.randomKase()
         const firstConnect = random(this.getNeigbors(start))
+        if(firstConnect)
         this.connectKases(start, firstConnect)
 
         const connectedCases = [start, firstConnect]
@@ -68,7 +89,7 @@ export class Labyrinth<TypeKase extends Kase> {
                 .filter(kase => kase.connections.length === 0)
 
             if (neighbors.length == 0) {
-                console.error("no nei", neighbors);
+                console.error("no unconnect neighbors", neighbors);
                 continue;
             }
             const neighbor = random(neighbors)
@@ -98,4 +119,11 @@ export class Labyrinth<TypeKase extends Kase> {
         return this.tableau.neighbors(kase)
     }
 
+    connectStar(kase: TypeKase ) {
+
+        this.tableau.neighbors(kase).forEach((nkase) => {
+            kase.addConnection(nkase)
+        });
+console.log(kase)
+    }
 }
