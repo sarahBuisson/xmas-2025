@@ -29,7 +29,7 @@ const FakeGlowMaterial = ({
                               depthWrite = false,
                               opacity = 1.0,
                           }) => {
-    const FakeGlowMaterial = useMemo(() => {
+    const FakeGlowMaterialTemp = useMemo(() => {
         return shaderMaterial(
             {
                 falloffAmount: falloff,
@@ -83,10 +83,10 @@ const FakeGlowMaterial = ({
         )
     }, [falloff, glowInternalRadius, glowColor, glowSharpness, opacity])
 
-    extend({ FakeGlowMaterial })
+    extend({ FakeGlowMaterialTemp })
 
     return (
-        <fakeGlowMaterial
+        <fakeGlowMaterialTemp
             key={FakeGlowMaterial.key}
             side={side}
             transparent={true}

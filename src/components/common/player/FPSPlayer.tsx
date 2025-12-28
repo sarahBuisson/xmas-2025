@@ -1,4 +1,4 @@
-import { Helper, PointerLockControls, useKeyboardControls } from "@react-three/drei";
+import { Helper, PerspectiveCamera, PointerLockControls, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { CapsuleCollider, RapierRigidBody, RigidBody, useRapier, } from "@react-three/rapier";
 import React, { useRef } from "react";
@@ -9,8 +9,8 @@ import { PointLightHelper, Vector3 } from "three";
 const SPEED = 3;
 const direction = new THREE.Vector3(0, 0, 0);
 
-export function FPSPlayer(props:{position?:Vector3}) {
-    const position= props.position || new Vector3(0,10,0);
+export function FPSPlayer(props:{position?:Vector3, ref:any}) {
+    const position= props.position || new Vector3(0,15,0);
     const bodyRef = useRef<RapierRigidBody>(null);
     const playerCapsuleColliderRef = useRef<RAIPER.Collider>(null);
     const [, get] = useKeyboardControls();
@@ -54,7 +54,7 @@ export function FPSPlayer(props:{position?:Vector3}) {
     });
 
     return (
-        <> <Helper type={PointLightHelper} args={[10, "red"]}/>
+        <>
             <PointerLockControls/>
             <RigidBody
                 ref={bodyRef}

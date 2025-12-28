@@ -1,22 +1,47 @@
 import { useLoader } from "@react-three/fiber";
-import  { useMemo } from "react";
-import * as T from "three";
-import { Color } from "three";import { SVGLoader } from 'three-stdlib'
+import React, { useMemo } from "react";
+import { Color, DoubleSide, Shape } from "three";
+import { SVGLoader } from 'three-stdlib'
+import FakeGlowMaterial from './material/FakeGlowMaterial.tsx';
 
 type  ExtrudedSvgProps = {
     svgPath: string,
     idInSvg?: string,
     maxWidth?: number,
     group?: any,
+    customProcess?: (shape: Shape[], index: number, svgdata: any) => any
+    customProcessMaterial?: (shape: Shape[], index: number, svgdata: any) => any
+    symmetric?: boolean
 }
 const ExtrudedSvg = (props: ExtrudedSvgProps) => {
+    const {
+        customProcess = () => {
+            return {
+                depth: 2,
+                bevelEnabled: true,
+                steps: 1,
+            }
+        },
+        customProcessMaterial = (shape: Shape[], shapeIndex: number, svgData: any) => {
+            return
+
+            <meshPhongMaterial
+                attach="material"
+
+                color={(svgData.paths[shapeIndex].color.add(new Color(2, 0, 0)))}
+
+
+            ></meshPhongMaterial>
+        },
+
+    } = props;
     const svgData = useLoader(SVGLoader, props.svgPath);
     const shapes =
         useMemo(() => {
 
             if (props.idInSvg) {
 
-                const group = svgData.paths.filter((path:any) => path?.userData?.node?.parentNode.id == props.idInSvg);
+                const group = svgData.paths.filter((path: any) => path?.userData?.node?.parentNode.id == props.idInSvg);
 
 
                 if (!props.group || props.group.length == 0) {
@@ -40,25 +65,33 @@ const ExtrudedSvg = (props: ExtrudedSvgProps) => {
 
             <mesh {...props}>
                 {shapes.map((shape, shapeIndex: number) => {
+                    return (<group>
+                            <mesh key={shapeIndex} rotation={[0, Math.PI / 2, 0]}>
+                                <extrudeGeometry
+                                    args={[
+                                        shape,
+                                        customProcess(shape, shapeIndex, svgData)
+                                        ,
+                                    ]}
+                                />
+                                {customProcessMaterial(shape, shapeIndex, svgData)}
 
-                    return (
-                        <mesh key={shapeIndex} position={[0, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-                            <extrudeGeometry
-                                args={[
-                                    shape,
-                                    {
-                                        depth: 1,
-                                        bevelEnabled: true,
-                                        steps: 1,
-                                    },
-                                ]}
-                            />
-                            <meshPhongMaterial
-                                attach="material"
-                                color={svgData.paths[shapeIndex].color.add(new Color(2, 0, 0))}
-                                side={T.DoubleSide}
-                            />
-                        </mesh>
+                            </mesh>
+                            {props.symmetric && (
+                                <mesh key={shapeIndex + "-sym"}  scale={[1, 1, -1]}  rotation={[0, Math.PI / 2, 0]}>
+                                    <extrudeGeometry
+                                        args={[
+                                            shape,
+                                            customProcess(shape, shapeIndex, svgData)
+                                            ,
+                                        ]}
+                                    />
+                                    {customProcessMaterial(shape, shapeIndex, svgData)}
+
+                                </mesh>
+                            )}
+
+                        </group>
                     );
                 })})
             </mesh>

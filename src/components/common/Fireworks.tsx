@@ -1,11 +1,11 @@
 import * as THREE from 'three'
-import React, { useState, useRef } from 'react'
-import { useFrame, extend } from '@react-three/fiber'
+import React, { useRef, useState } from 'react'
+import { extend, useFrame } from '@react-three/fiber'
 import { UnrealBloomPass } from 'three-stdlib'
 
-extend({ UnrealBloomPass })
+extend({UnrealBloomPass})
 
-function Particle({ position, color }) {
+function Particle({position, color}) {
     const velocityRef = useRef(
         new THREE.Vector3(
             Math.random() * 0.1 - 0.05, // Adjust the range of x-component
@@ -33,52 +33,57 @@ function Particle({ position, color }) {
     return (
         <>
             <mesh ref={meshRef} position={position}>
-                <sphereGeometry args={[0.02, 0, 0.01]}  />
+                <sphereGeometry args={[0.2, 2, 0.01]}/>
                 <meshStandardMaterial
                     color={color}
                     emissive={color}
-                    roughness={0.1}
-                    metalness={10}
-                    // @ts-ignore
-                    shininess={100}
                 />
             </mesh>
         </>
     )
 }
 
-function Fireworks(props: any) {
-    const [particles, setParticles] = useState([])
-    const [explode, setExplode] = useState(false)
-    const fireworkRef = useRef<THREE.Mesh>()
+function Fireworks(props: { computeColor: (index) => THREE.Color, explodeFromStart?: boolean, neverStop?: boolean }) {
+    const {
+        computeColor = () => {
+            return new THREE.Color(Math.random() * 0x0000ff + 0x22aabb);
+        },
+        explodeFromStart = false,
+        neverStop = false
+    } = props
 
-    const onClick = () => {
-        setExplode(true)
-        // setIsDisposed(false);
-    }
+    const [particles, setParticles] = useState([])
+    const [explode, setExplode] = useState(explodeFromStart)
+    const fireworkRef = useRef<THREE.Mesh>(null)
+
+
 
     useFrame(() => {
-        if (explode) {
-            const pos = fireworkRef.current.position
+            if (explode &&fireworkRef.current) {
+                const pos = fireworkRef.current.position
 
-            for (let i = 0; i < 100; i++) {
-                const color = new THREE.Color(Math.random() * 0xffffff)
-                const position = new THREE.Vector3(pos.x, pos.y, pos.z)
+                for (let i = 0; i < 1; i++) {
+                    const color = computeColor(i)
+                    const position = new THREE.Vector3(pos.x, pos.y, pos.z)
 
-                setParticles((prevState) => [...prevState, <Particle key={Math.random()} position={position} color={color} />])
+                    if(props.children){
+                        React.cloneElement(props.children as React.ReactElement, {key: Math.random(), position: position, color: color})
+                    }else {
+                        setParticles((prevState) => [...prevState,
+                            <Particle key={Math.random()} position={position} color={color}/>])
+                    }
+                }
+                if (!neverStop)
+                    setExplode(false)
             }
 
-            setExplode(false)
+            setParticles((prevState) => prevState.filter(Boolean))
         }
-
-        setParticles((prevState) => prevState.filter(Boolean))
-    })
+    )
 
     return (
         <>
-            <mesh ref={fireworkRef} onClick={onClick} {...props} onPointerEnter={onClick}>
-                <sphereGeometry args={[0.07, 8, 8]} />
-                <meshBasicMaterial color={'orange'} />
+            <mesh ref={fireworkRef}>
                 {particles}
             </mesh>
         </>

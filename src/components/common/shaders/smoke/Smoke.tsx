@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import coffeeSmokeVertexShader from './shaders/coffeeSmoke/vertex.glsl'
 // @ts-ignore
 import coffeeSmokeFragmentShader from './shaders/coffeeSmoke/fragment.glsl'
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { OrbitControls, shaderMaterial } from '@react-three/drei'
 import { BufferGeometry, Color, SphereGeometry, Vector3 } from 'three';
 
@@ -17,9 +17,15 @@ export function Smoke(props: {
     geometry?: BufferGeometry,
     texture?: string,
     scale?: Vector3 | number,
-    position?: Vector3
+    position?: Vector3,
+    speed?: number,
+    timeDecalage?: number
+    uSpeedRotation?: number
 }) {
-console.log("smoke")
+    const {speed=1,
+        timeDecalage=Math.random()*10,
+        uSpeedRotation=1}=props;
+
     /**
      * Smoke
      */
@@ -58,6 +64,7 @@ console.log("smoke")
         uniforms:
             {
                 uTime: new THREE.Uniform(0),
+                uSpeedRotation: new THREE.Uniform(uSpeedRotation),
                 uColor: new THREE.Uniform(props.color || new Color(0xffffff)),
                 uPerlinTexture: new THREE.Uniform(perlinTexture)
             },
@@ -75,7 +82,7 @@ console.log("smoke")
         const elapsedTime = clock.getElapsedTime()
 
         // Update smoke
-        smokeMaterial.uniforms.uTime.value = elapsedTime
+        smokeMaterial.uniforms.uTime.value = elapsedTime*speed + timeDecalage
 
         // Update controls
 
@@ -86,14 +93,17 @@ console.log("smoke")
 
 export const SmokeMaterial = shaderMaterial(
 {
-    uTime: new THREE.Uniform(0),
-        uColor: new THREE.Uniform(props.color || new Color(0xffffff)),
-    uPerlinTexture: new THREE.Uniform(perlinTexture)
+    uTime: 0,
+        uColor:( new Color(0xffffff)),
+    uPerlinTexture: (textureLoader.load( './perlin.png')),
+    side: THREE.DoubleSide,
+    transparent: true,
+    depthWrite: false
 },
     coffeeSmokeVertexShader,
     coffeeSmokeFragmentShader
 );
-
+extend({SmokeMaterial})
 
 export function SmockeApp() {
     return (
