@@ -3,9 +3,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './styles/main.css'
 import { KeyboardControls } from '@react-three/drei';
-import { LandscapeScene } from './components/landscapeGame/LandscapeScene.tsx';
+import { ChristmasScene } from './components/christmasGame/christmasScene.tsx';
 
 function Main() {
+
+
     return <React.StrictMode>
         <KeyboardControls
             map={[
@@ -15,11 +17,14 @@ function Main() {
                 {name: "right", keys: ["ArrowRight", "d", "D"]},
                 {name: "jump", keys: ["Space"]},
             ]}>
-            <Canvas shadows>
-                {LandscapeScene()}
+
+            <Canvas camera={{fov:25}} >
+                <ChristmasScene></ChristmasScene>
+
             </Canvas>
 
             <img id="screenshot" style={{display: 'none'}}/>
+            <div className="dot"/>
         </KeyboardControls>
     </React.StrictMode>;
 }

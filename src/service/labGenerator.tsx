@@ -126,4 +126,8 @@ connectCorridor(kaseStart: TypeKase, length?:number) {
         });
 console.log(kase)
     }
+
+    getCulDeSacs(): TypeKase[] {
+        return this.tableau.allKases().filter(kase => kase.connections.length === 1)
+    }
 }

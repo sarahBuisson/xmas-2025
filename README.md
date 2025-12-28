@@ -1,5 +1,5 @@
 # 
-https://sarahbuisson.github.io/three-js-aquarium-challenge/
+https://sarahbuisson.github.io/three-christmas-2025-challenge/
 
 ## 🕹️ Commands
 

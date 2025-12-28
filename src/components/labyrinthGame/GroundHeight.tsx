@@ -49,13 +49,10 @@ export function GroundHeight(props: {
                         const sprite = spriteFunction(new Vector3(y, props.heightField[y][x] + 0.5, x)) as ReactElement | undefined;
                         if (sprite)
                             sprites.push(sprite);
-
                     }
                 } else {
                     if (spriteFunction) {
                         const texture = useTexture(spriteFunction!!);
-
-
                         sprites.push(<sprite key={`${x}-${y}`} position={[y, props.heightField[y][x] + 0.5, x]}
                                              scale={[1, 1, 1]}>
                             <spriteMaterial map={texture}/>
@@ -68,6 +65,9 @@ export function GroundHeight(props: {
         }
     )
     ;
+
+
+
 
 
     return <RigidBody colliders={false} position={props.position}>
