@@ -161,6 +161,19 @@ export const TreeBall = (props: { count: number, sparkling: boolean }) => {
 }
 export const Ornement = (props:{key:string}) => {
 
+
+    return <group >   <mesh scale={[0.1, 0.2, 0.1]} position={[0,0.4,0]} >
+        <octahedronGeometry args={[1,2 ]}></octahedronGeometry>
+
+        <CustomNormalMaterial color1={new Color("cyan")}
+                              color2={new Color("#87CEEB")}
+                              color3={new Color("white")}
+
+        ></CustomNormalMaterial>
+    </mesh></group>
+}
+export const Ornement2 = (props:{key:string}) => {
+
     const [rotations, setRotations] = useState<Euler[]>(() => {
 
 

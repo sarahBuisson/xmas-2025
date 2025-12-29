@@ -20,7 +20,7 @@ export function MoveOnClickWrapper({
     callOnEnd: () => void;
 }) {
     const [position, setPosition] = useState(trajectory.getPointAt(0));
-    const [rotation, setRotation] = useState(new Euler(0,0,0));
+    const [rotation, setRotation] = useState(()=>calculateLookAtRotation( trajectory.getPointAt(0), trajectory.getPointAt(1)));
     const [isMoving, setIsMoving] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [elapsedIntervalTime, setElapsedIntervalTime] = useState(0);
@@ -35,7 +35,7 @@ export function MoveOnClickWrapper({
 
             if (trajectory) {
                 const newPosition = trajectory.getPointAt(t)
-              setRotation(calculateLookAtRotation(newPosition, trajectory.getPointAt(t+0.01>1?1:t+0.05)))
+              setRotation(calculateLookAtRotation(newPosition, trajectory.getPointAt(1)))
 
                 setPosition(newPosition);
                 if(everyInterval && callEvery)

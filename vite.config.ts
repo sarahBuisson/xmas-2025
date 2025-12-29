@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [react(),        glsl() ],
-    base: '/three-christmas-2025-challenge/',
+    base: '/xmas-2025/',
     assetsInclude: [
         '**/*.stl',   // STereoLithography
         '**/*.mp3',   // STereoLithography

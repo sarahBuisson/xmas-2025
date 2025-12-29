@@ -1,5 +1,5 @@
 # 
-https://sarahbuisson.github.io/three-christmas-2025-challenge/
+https://sarahbuisson.github.io/xmas-2025/
 
 ## 🕹️ Commands
 
