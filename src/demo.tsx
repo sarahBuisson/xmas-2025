@@ -32,8 +32,10 @@ function MainDemo() {
             ]}>
             <Canvas shadows={true}>
                 <OrbitControls></OrbitControls>
-                <spotLight position={[0,3 , 0]} angle={0.3} penumbra={10} intensity={2} castShadow={true}></spotLight>
-                <Home></Home>
+
+                <pointLight position={[2, 2, 4]} intensity={1}  distance={20} castShadow></pointLight>
+                <ambientLight></ambientLight>
+                <Ornement></Ornement>
 
             </Canvas>
 

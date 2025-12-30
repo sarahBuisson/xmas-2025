@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import { RoundedBoxGeometry, useTexture } from '@react-three/drei';
 
 import { extend } from '@react-three/fiber';
@@ -7,6 +7,8 @@ import { RigidBody } from '@react-three/rapier';
 import { RandomCircleDistribution } from '../../common/RandomCircleDistribution.tsx';
 import { hexaSize, labSize } from '../constant.tsx';
 import IntrinsicElements = React.JSX.IntrinsicElements;
+import { CustomNormalMaterial } from '../../common/shaders/customNormal/CustomNormalMaterial.tsx';
+import React from 'react';
 
 
 extend({CustomTubeGeometry});
@@ -98,3 +100,13 @@ export function BackgroundMountains() {
             </mesh>
         </RandomCircleDistribution></>;
 }
+
+export const snowPit=()=>  (<mesh position={[0,0,0]} >
+    <torusKnotGeometry args={[1, 2, 100, 16]} scale={0.1}></torusKnotGeometry>
+
+    <CustomNormalMaterial color1={new Color("cyan")}
+                          color2={new Color("#87CEEB")}
+                          color3={new Color("white")}
+
+    ></CustomNormalMaterial>
+</mesh>)

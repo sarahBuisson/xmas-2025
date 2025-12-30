@@ -1,8 +1,8 @@
 import { Smoke, SmokeMaterial } from '../../common/shaders/smoke/Smoke.tsx';
 import { extend, useFrame } from '@react-three/fiber';
 import { BoxGeometry, CylinderGeometry, Euler, PlaneGeometry, SphereGeometry, Vector3 } from 'three';
-import { useState } from 'react';
-import { Float } from '@react-three/drei';
+import React, { useState } from 'react';
+import { Float, PositionalAudio } from '@react-three/drei';
 
 extend({SmokeMaterial, Smoke});
 
@@ -16,5 +16,9 @@ export function Wind(props: { position?: Vector3, rotation?: Euler, sizeWind: nu
                        geometry={new PlaneGeometry(1,2)}></Smoke>
             </group>
         </Float>
+        <PositionalAudio  url="./sound/wind.mp3"
+                          distance={10} play={true}
+                          position={[0,0,0]}
+                          loop></PositionalAudio>
     </group>
 }

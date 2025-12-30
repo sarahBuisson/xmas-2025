@@ -20,7 +20,7 @@ import { Wind } from './decor/Wind.tsx';
 import { CustomNormalMaterial } from '../common/shaders/customNormal/CustomNormalMaterial.tsx';
 import { hexaSize, labSize } from './constant.tsx';
 import { AnimateSpiralGeometry, Ornement } from './decor/trees.tsx';
-import { DistanceDisplayWrapper } from '../common/DistanceDisplayWrapper.tsx';
+import { DistanceDisplayWrapper } from '../common/interactiveRender/DistanceDisplayWrapper.tsx';
 import FakeGlowMaterial from '../common/material/FakeGlowMaterial.tsx';
 
 extend({Glow})
@@ -157,7 +157,7 @@ console.log("remove", key)
 
                     callOnStart={() => {
                         connection.discovered = true;
-                        soundPlayerRef.current?.playSound("./sound/firecracker.wav");
+                        soundPlayerRef.current?.playSound("./sound/crystal-chimes.wav");
                     }}
                     everyInterval={0.8}
                     callEvery={(currentPos) => {
@@ -178,13 +178,14 @@ console.log("remove", key)
                         let tree = generateTree(connection);
                         addToContent(tree);
                         removeKeyToContent(keyBall)
-                        soundPlayerRef.current?.stopSound("./sound/firecracker.wav");
+                        soundPlayerRef.current?.stopSound("./sound/crystal-chimes.wav");
                     }}
 
                 >
                     <ProgressiveAppear>
                         <group scale={1}>
-                            <Ornement key={kase.positionKey() + "ornement" + index}></Ornement>
+                            <Ornement key={kase.positionKey() + "ornement" + index}
+                            ></Ornement>
 
                         </group>
                     </ProgressiveAppear>
@@ -229,7 +230,8 @@ console.log("remove", key)
                 const computedPosition = (neiPos.add(kasePosition)).multiplyScalar(0.5);
                 if (!kase.connections.includes(neighbor.positionKey())) {
                     if (Math.random() > 0.5) {
-                        const wind = <DistanceDisplayWrapper position={computedPosition}>
+                        const wind =
+                            <DistanceDisplayWrapper position={computedPosition} maxDistance={hexaSize*2}>
                             <Wind sizeWind={hexaSize / 3}
                                   rotation={calculateLookAtRotation(kasePosition, neiPos)}></Wind>
                         </DistanceDisplayWrapper>

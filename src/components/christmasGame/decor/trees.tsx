@@ -7,6 +7,7 @@ import FakeGlowMaterial from '../../common/material/FakeGlowMaterial.tsx';
 import Fireworks from '../../common/Fireworks.tsx';
 import { Float, Sparkles } from '@react-three/drei';
 import IntrinsicElements = React.JSX.IntrinsicElements;
+
 export function computeSpiralPoint(animatePercent: number, nbrOfTurn: number, radius: number, offset: number | undefined, height: number): number[] {
 
     const angle = ((100 - animatePercent) / 100) * Math.PI * nbrOfTurn * 2; // Angle for each point
@@ -74,8 +75,11 @@ export const AnimateSpiralGeometry = (props: {
             if (props.onAnimateStart)
                 props.onAnimateStart()
         }}>
+            {console.log(animate)}
             <TreeBall count={5} sparkling={animate}></TreeBall>
-
+            <Fireworks explodeFromStart={animate}
+                       neverStop={true}
+                       computeColor={() => new Color("cyan")}></Fireworks>
         </IsInteractible>
         </group>
         <mesh position={points[0]}>
@@ -159,27 +163,34 @@ export const TreeBall = (props: { count: number, sparkling: boolean }) => {
     )
     return <group>{elements}</group>
 }
-export const Ornement = (props:{key:string}) => {
+export const Ornement = () => {
 
+    const [sparkle, setSparkle] = useState(false);
 
-    return <group >   <mesh scale={[0.1, 0.2, 0.1]} position={[0,0.4,0]} >
-        <octahedronGeometry args={[1,2 ]}></octahedronGeometry>
+    return <group scale={0.1} onPointerDown={() => {console.log("spar");setSparkle(!sparkle)}}>
+        <pointLight intensity={0.5} color={"cyan"}></pointLight>
+        <Fireworks explodeFromStart={sparkle}
+                   neverStop={true}
+                   computeColor={() => new Color("cyan")}></Fireworks>
+        <mesh>
+            <torusKnotGeometry args={[0.8, 1, 10, 4, 4, 7]} scale={0.1}></torusKnotGeometry>
 
-        <CustomNormalMaterial color1={new Color("cyan")}
-                              color2={new Color("#87CEEB")}
-                              color3={new Color("white")}
+            <CustomNormalMaterial color1={new Color("cyan")}
+                                  color2={new Color("blue")}
+                                  color3={new Color("white")}
 
-        ></CustomNormalMaterial>
-    </mesh></group>
+            ></CustomNormalMaterial>
+        </mesh>
+    </group>
 }
-export const Ornement2 = (props:{key:string}) => {
+export const Ornement2 = (props: { key: string }) => {
 
     const [rotations, setRotations] = useState<Euler[]>(() => {
 
 
         const result = [];
         for (let i = 0; i < 4; i++) {
-            result.push(new Euler(Math.random() * Math.PI/4 , Math.random() * Math.PI/4, Math.random() * Math.PI/4 ));
+            result.push(new Euler(Math.random() * Math.PI / 4, Math.random() * Math.PI / 4, Math.random() * Math.PI / 4));
         }
 
         return result
@@ -189,10 +200,10 @@ export const Ornement2 = (props:{key:string}) => {
     const elements = rotations?.map((r, index) => (
 
 
-            <group rotation={r} key={props.key+"-part-" + index} >
+            <group rotation={r} key={props.key + "-part-" + index}>
 
 
-                <mesh scale={[0.1, 0.2, 0.1]} position={[0,0.4,0]} >
+                <mesh scale={[0.1, 0.2, 0.1]} position={[0, 0.4, 0]}>
                     <octahedronGeometry args={[2, 0]}></octahedronGeometry>
 
                     <CustomNormalMaterial color1={new Color("cyan")}

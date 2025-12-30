@@ -31,7 +31,7 @@ export function MoveOnClickWrapper({
              duration = duration || 20; // 5 seconds
             const newElapsedTime = elapsedTime + delta;
             let newElapsedIntervalTime = elapsedIntervalTime + delta;
-            const t = Math.min(newElapsedTime / duration, 1); // Clamp t between 0 and 1
+            const t = Math.min(0.0+newElapsedTime / duration, 1.0); // Clamp t between 0 and 1
 
             if (trajectory) {
                 const newPosition = trajectory.getPointAt(t)

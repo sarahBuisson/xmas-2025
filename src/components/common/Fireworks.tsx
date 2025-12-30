@@ -43,7 +43,8 @@ function Particle({position, color}) {
     )
 }
 
-function Fireworks(props: { computeColor: (index) => THREE.Color, explodeFromStart?: boolean, neverStop?: boolean }) {
+function Fireworks(props: { computeColor?: (index) => THREE.Color,
+    explodeFromStart?: boolean, neverStop?: boolean }) {
     const {
         computeColor = () => {
             return new THREE.Color(Math.random() * 0x0000ff + 0x22aabb);
@@ -62,7 +63,7 @@ function Fireworks(props: { computeColor: (index) => THREE.Color, explodeFromSta
             if (explode &&fireworkRef.current) {
                 const pos = fireworkRef.current.position
 
-                for (let i = 0; i < 1; i++) {
+                for (let i = 0; i < 2; i++) {
                     const color = computeColor(i)
                     const position = new THREE.Vector3(pos.x, pos.y, pos.z)
 
